@@ -1,5 +1,10 @@
 package Controller;
 
+import java.io.IOException;
+import java.sql.SQLException;
+
+import Model.Account;
+import Util.ConnectionUtil;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
@@ -16,7 +21,7 @@ public class SocialMediaController {
      */
     public Javalin startAPI() {
         Javalin app = Javalin.create();
-        app.get("example-endpoint", this::exampleHandler);
+        app.get("/register", this::register);
 
         return app;
     }
@@ -25,9 +30,23 @@ public class SocialMediaController {
      * This is an example handler for an example endpoint.
      * @param context The Javalin Context object manages information about both the HTTP request and response.
      */
-    private void exampleHandler(Context context) {
-        context.json("sample text");
+    private void register(Context context) throws IOException, SQLException {
+        Account account = ctx.bodyAsClass(Account.class);
+
+        if (account.getUsername().isBlank()) {
+            ctx.status(400);
+            return;
+        }
+
+        if (account.getPassword().length() < 4) {
+            ctx.status(400);
+            return;
+        }
+
+        account.setPassword(AuthUtil.hashPassword(account.getPassword()));
+        int id = ConnectionUtil.getAccountDAO().insert(account);
+        account.setId(id);
+        ctx.status(200);
+        ctx.json(account);
     }
-
-
 }
