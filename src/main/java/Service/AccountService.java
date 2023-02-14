@@ -2,6 +2,7 @@ package Service;
 
 import DAO.AccountDAO;
 import Model.Account;
+import Model.Message;
 
 import java.sql.SQLException;
 
@@ -20,4 +21,11 @@ public class AccountService {
         Account account = new Account(username, password);
         return accountDAO.insert(account);
     }
+
+    public int createMessage(int message_id, String message_text, long time_posted_epoch) {
+       
+        new Message(message_id, message_text, time_posted_epoch);
+        return 0;
+    }
+
 }

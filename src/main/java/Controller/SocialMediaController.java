@@ -6,6 +6,7 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 
 import Model.Account;
+import Model.Message;
 import Service.AccountService;
 import Util.ConnectionUtil;
 import io.javalin.Javalin;
@@ -86,10 +87,11 @@ public class SocialMediaController {
 
         account.setPassword(AuthUtil.hashPassword(account.getPassword()));
         int id = accountService.createAccount(account.getUsername(), account.getPassword());
-        account.setId(id);
+        Account responseAccount = new Account(id, account.getUsername(), account.getPassword());
         context.status(200);
-        context.json(account);
+        context.json(responseAccount);
     }
+
 
 
     /**
@@ -122,16 +124,17 @@ public class SocialMediaController {
                 context.result("Invalid credentials");
                 return;
             }
-    
-            String message = context.formParam("message");
-            if (message.isBlank()) {
+        
+            Message message = context.bodyAsClass(Message.class);
+            if (message.getMessage_id() == 0) {
                 context.status(400);
-                context.result("Invalid message");
+                context.result("Invalid message id");
                 return;
             }
-    
-            int messageId = accountService.createMessage(existingAccount.getId(), message);
+        
+            int messageId = accountService.createMessage(message.getMessage_id(), message.getMessage_text(), message.getTime_posted_epoch());
             context.status(200);
             context.result("Successfully created message with id: " + messageId);
         }
-    }
+}
+        
