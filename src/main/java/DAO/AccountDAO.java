@@ -1,10 +1,11 @@
-package Model;
+package DAO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import Model.Account;
 import Util.ConnectionUtil;
 
 public class AccountDAO {
@@ -43,3 +44,6 @@ public class AccountDAO {
         return -1;
     }
 }
+
+    
+
