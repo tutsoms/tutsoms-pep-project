@@ -1,7 +1,7 @@
-commit 435483b21c987ab971c8ad6bd086e161ceed8287
+commit 83ff35760d72d88a8ff3644ac57b2a639ddaedba
 Author: tutsoms <tutsoms@gmail.com>
-Date:   Tue Feb 14 01:50:29 2023 +0000
+Date:   Tue Feb 14 03:05:09 2023 +0000
 
-    1st draft sync
+    2nd draft
 
- 2 files changed, 16 insertions(+), 60 deletions(-)
+ 4 files changed, 1348 insertions(+), 36 deletions(-)
