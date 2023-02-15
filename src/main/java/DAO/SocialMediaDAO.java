@@ -196,4 +196,20 @@ public Message updateMessage(int messageId, Message message) throws SQLException
 public Message deleteMessageById(int messageId) {
     return null;
 }
+
+public Account isAccountExist(String username) {
+    return null;
+}
+
+public boolean isAccountExist(int posted_by) {
+    return false;
+}
+
+public List<Message> getAllMessagesByAccount(int accountId) {
+    return null;
+}
+
+public Message updateMessageById(int id, Message message) {
+    return null;
+}
 }
