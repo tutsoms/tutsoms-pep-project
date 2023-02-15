@@ -22,9 +22,6 @@ public class SocialMediaController {
 
      private SocialMediaService service;
 
-     public SocialMediaController() {
-         this.service = service;
-     }
  
     public Javalin startAPI() {
         Javalin app = Javalin.create();
@@ -33,8 +30,8 @@ public class SocialMediaController {
 
         app.get("/messages", this::getAllMessages);
         app.post("/messages", this::createMessage);
-        app.get("/messages/:id", this::getMessageById);
-        app.delete("/messages/:id", this::deleteMessageById);
+        app.get("/messages/{id}", this::getMessageById);
+        app.delete("/messages/{id}", this::deleteMessageById);
 
         return app;
     }
