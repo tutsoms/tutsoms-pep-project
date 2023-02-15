@@ -24,6 +24,7 @@ public class SocialMediaController {
 
  
     public Javalin startAPI() {
+        service = new SocialMediaService(null);
         Javalin app = Javalin.create();
         app.post("/register", this::createAccount);
         app.post("/login", this::login);
