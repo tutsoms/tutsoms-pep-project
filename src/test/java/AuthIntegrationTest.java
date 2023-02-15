@@ -66,7 +66,7 @@ public class AuthIntegrationTest {
                         "\"password\": \"password\" }"))
                 .header("Content-Type", "application/json")
                 .build();
-        HttpResponse response = webClient.send(postRequest, HttpResponse.BodyHandlers.ofString());
+         HttpResponse response = webClient.send(postRequest, HttpResponse.BodyHandlers.ofString());
         int status = response.statusCode();
 //        the response status should be 200
         Assert.assertEquals(200, status);
