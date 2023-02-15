@@ -1,7 +1,7 @@
-commit 84c1202445f46c570ef457da6d60636f62998d7b
+commit a8eb65b331ee80fc02101c54b7509398f00f1c16
 Author: tutsoms <tutsoms@gmail.com>
-Date:   Wed Feb 15 03:17:03 2023 +0000
+Date:   Wed Feb 15 03:30:38 2023 +0000
 
-    complete reset
+    reset 2nd save
 
- 9 files changed, 333 insertions(+), 226 deletions(-)
+ 3 files changed, 1590 insertions(+), 218 deletions(-)

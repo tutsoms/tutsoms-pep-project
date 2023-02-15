@@ -118,7 +118,7 @@ public List<Message> getAllMessages() throws SQLException {
                     String username = resultSet2.getString("username");
                     String password = resultSet2.getString("password");
 
-                    Account account = new Account(accountId, username, password);
+                    new Account(accountId, username, password);
                     Message message = new Message(messageId, messageText, timePostedEpoch);
                     messages.add(message);
                 }
@@ -146,7 +146,7 @@ public Message getMessageById(int messageId) throws SQLException {
                     String username = resultSet2.getString("username");
                     String password = resultSet2.getString("password");
 
-                    Account account = new Account(accountId, username, password);
+                    new Account(accountId, username, password);
                     Message message = new Message(messageId, messageText, timePostedEpoch);
                     return message;
                 }

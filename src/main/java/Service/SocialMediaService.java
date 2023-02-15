@@ -42,4 +42,20 @@ public class SocialMediaService {
     public Message deleteMessageById(int messageId) throws SQLException {
         return socialMediaDAO.deleteMessageById(messageId);
     }
+
+    public boolean isAccountExist(String username) {
+        return false;
+    }
+
+    public boolean isAccountExist(int posted_by) {
+        return false;
+    }
+
+    public List<Message> getAllMessagesByAccount(int accountId) {
+        return null;
+    }
+
+    public Message updateMessageById(int id, Message message) {
+        return null;
+    }
 }
