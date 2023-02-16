@@ -1,5 +1,6 @@
 package Controller;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import Model.Account;
@@ -20,12 +21,14 @@ public class SocialMediaController {
      * @return a Javalin app object which defines the behavior of the Javalin controller.
      */
 
-     private SocialMediaService service;
-
+    
+    private SocialMediaService socialMediaService;
+    
+    
  
     public Javalin startAPI() {
-        service = new SocialMediaService(null);
         Javalin app = Javalin.create();
+        this.socialMediaService = new SocialMediaService(null);
         app.post("/register", this::createAccount);
         app.post("/login", this::login);
         app.post("/messages", this::createMessage);
@@ -43,68 +46,66 @@ public class SocialMediaController {
      * This is an example handler for an example endpoint.
      * @param context The Javalin Context object manages information about both the HTTP request and response.
      */
-    private void createAccount(Context ctx) throws Exception {
+
+     private void createAccount(Context ctx) throws SQLException {
         Account account = ctx.bodyAsClass(Account.class);
-        if (account.getUsername().isBlank() || account.getPassword().length() < 4 || service.isAccountExist(account.getUsername())) {
-            ctx.status(400);
-        } else {
-            Account createdAccount = SocialMediaService.createAccount(account);
-            ctx.json(createdAccount);
-        }
+        Account createdAccount = socialMediaService.createAccount(account);
+        ctx.status(201).json(createdAccount);
     }
 
-    private void login(Context ctx) throws Exception {
+    private void login(Context ctx) throws SQLException {
         Account account = ctx.bodyAsClass(Account.class);
-        Account loggedInAccount = service.login(account);
+        Account loggedInAccount = socialMediaService.login(account);
         if (loggedInAccount == null) {
             ctx.status(401);
         } else {
-            ctx.json(loggedInAccount);
+            ctx.status(200).json(loggedInAccount);
         }
     }
 
-    private void createMessage(Context ctx) throws Exception {
+    private void createMessage(Context ctx) throws SQLException {
         Message message = ctx.bodyAsClass(Message.class);
-        if (message.getMessage_text().isBlank() || message.getMessage_text().length() > 255 || !service.isAccountExist(message.getPosted_by())) {
-            ctx.status(400);
-        } else {
-            Message createdMessage = service.createMessage(message);
-            ctx.json(createdMessage);
+        if (message.getMessage_text().isBlank() || message.getMessage_text().length() > 255
+                || !socialMediaService.isAccountExist(message.getPosted_by())) {
+            ctx.status(400).result("Invalid message data.");
+            return;
         }
+        Message createdMessage = socialMediaService.createMessage(message);
+        ctx.status(201).json(createdMessage);
     }
 
-    private void getAllMessages(Context ctx) throws Exception {
-        List<Message> messages = service.getAllMessages();
+    private void getAllMessages(Context ctx) throws SQLException {
+        List<Message> messages = socialMediaService.getAllMessages();
         ctx.json(messages);
     }
 
-    private void getMessageById(Context ctx) throws Exception {
+    private void getMessageById(Context ctx) throws SQLException {
         int id = Integer.parseInt(ctx.pathParam("id"));
-        Message message = service.getMessageById(id);
+        Message message = socialMediaService.getMessageById(id);
         if (message == null) {
-            ctx.status(200);
+            ctx.status(404);
         } else {
             ctx.json(message);
         }
     }
 
-    private void deleteMessageById(Context ctx) throws Exception {
+    private void deleteMessageById(Context ctx) throws SQLException {
         int id = Integer.parseInt(ctx.pathParam("id"));
-        Message deletedMessage = service.deleteMessageById(id);
+        Message deletedMessage = socialMediaService.deleteMessageById(id);
         if (deletedMessage == null) {
-            ctx.status(200);
+            ctx.status(404);
         } else {
             ctx.json(deletedMessage);
         }
     }
 
-    private void updateMessageById(Context ctx) throws Exception {
+    private void updateMessageById(Context ctx) throws SQLException {
         int id = Integer.parseInt(ctx.pathParam("id"));
         Message message = ctx.bodyAsClass(Message.class);
         if (message.getMessage_text().isBlank() || message.getMessage_text().length() > 255) {
             ctx.status(400);
         } else {
-            Message updatedMessage = service.updateMessageById(id, message);
+            Message updatedMessage = socialMediaService.updateMessageById(id, message);
             if (updatedMessage == null) {
                 ctx.status(404);
             } else {
@@ -112,11 +113,10 @@ public class SocialMediaController {
             }
         }
     }
-    
-    private void getAllMessagesByAccount(Context ctx) throws Exception {
+
+    private void getAllMessagesByAccount(Context ctx) throws SQLException {
         int accountId = Integer.parseInt(ctx.pathParam("id"));
-        List<Message> messages = service.getAllMessagesByAccount(accountId);
+        List<Message> messages = socialMediaService.getAllMessagesByAccount(accountId);
         ctx.json(messages);
     }
-    
 }

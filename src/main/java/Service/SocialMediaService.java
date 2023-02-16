@@ -1,61 +1,83 @@
 package Service;
 
-import DAO.SocialMediaDAO;
-import Model.Account;
-import Model.Message;
-
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
+import DAO.AccountDAO;
+import DAO.MessageDAO;
+import Model.Account;
+import Model.Message;
+
 public class SocialMediaService {
-    private static SocialMediaDAO socialMediaDAO;
+
+    private final AccountDAO accountDAO;
+    private final MessageDAO messageDAO;
 
     public SocialMediaService(Connection connection) {
-        socialMediaDAO = new SocialMediaDAO(connection);
+        this.accountDAO = new AccountDAO(connection);
+        this.messageDAO = new MessageDAO(connection);
     }
 
-    public static Account createAccount(Account account) throws SQLException {
-        return socialMediaDAO.createAccount(account);
+    public Account createAccount(String username, String password) throws SQLException {
+        Account account = new Account(0, username, password);
+        return accountDAO.insert(account);
     }
 
-    public Account login(Account account) throws SQLException {
-        return socialMediaDAO.login(account);
+    public Account getAccountById(int accountId) throws SQLException {
+        return accountDAO.findById(accountId);
     }
 
-    public Message createMessage(Message message) throws SQLException {
-        return socialMediaDAO.createMessage(message);
+    public Account getAccountByUsername(String username) throws SQLException {
+        return accountDAO.findByUsername(username);
+    }
+
+    public Message createMessage(int accountId, String messageText, long timePostedEpoch) throws SQLException {
+        Account account = accountDAO.findById(accountId);
+        if (account == null) {
+            throw new SQLException("Account does not exist.");
+        }
+        Message message = new Message(0, accountId, messageText, timePostedEpoch);
+        return messageDAO.insert(message);
     }
 
     public List<Message> getAllMessages() throws SQLException {
-        return socialMediaDAO.getAllMessages();
+        return messageDAO.findAll();
     }
 
     public Message getMessageById(int messageId) throws SQLException {
-        return socialMediaDAO.getMessageById(messageId);
-    }
-
-    public Message deleteMessage(int messageId) throws SQLException {
-        return socialMediaDAO.deleteMessage(messageId);
+        return messageDAO.findById(messageId);
     }
 
     public Message deleteMessageById(int messageId) throws SQLException {
-        return socialMediaDAO.deleteMessageById(messageId);
+        return messageDAO.deleteById(messageId);
     }
 
-    public boolean isAccountExist(String username) {
-        return false;
+    public void updateMessage(Message message) throws SQLException {
+        messageDAO.update(message);
     }
 
-    public boolean isAccountExist(int posted_by) {
-        return false;
+    public Account createAccount(Account account) throws SQLException {
+        return accountDAO.insert(account);
     }
 
-    public List<Message> getAllMessagesByAccount(int accountId) {
-        return null;
+    public Account login(Account account) throws SQLException {
+        return accountDAO.login(account);
     }
 
-    public Message updateMessageById(int id, Message message) {
-        return null;
+    public boolean isAccountExist(int posted_by) throws SQLException {
+        return accountDAO.isAccountExist(posted_by);
+    }
+
+    public Message createMessage(Message message) throws SQLException {
+        return messageDAO.insert(message);
+    }
+
+    public Message updateMessageById(int id, Message message) throws SQLException {
+        return messageDAO.updateById(id, message);
+    }
+
+    public List<Message> getAllMessagesByAccount(int accountId) throws SQLException {
+        return messageDAO.findAllByAccount(accountId);
     }
 }
